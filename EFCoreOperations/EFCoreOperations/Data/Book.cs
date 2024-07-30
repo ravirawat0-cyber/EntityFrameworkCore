@@ -1,4 +1,6 @@
-﻿namespace EFCoreOperations.Data
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EFCoreOperations.Data
 {
     public class Book
     {
@@ -8,5 +10,9 @@
          public int NoOfPages{ get; set; }  
          public bool IsActive { get; set; }
          public DateTime CreatedOn { get; set; }
+         public int LanguageId { get; set; }
+
+        [ForeignKey(nameof(LanguageId))]
+         public Language Language { get; set; }
     }
 }
