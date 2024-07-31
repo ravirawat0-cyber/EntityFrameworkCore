@@ -61,7 +61,12 @@ namespace EFCoreOperations.Controllers
            // var ids = new List<int> { 1, 2, 3 };
             var result = await _context.Currencies.
                 Where(x => ids.Contains(x.Id))
-                .ToListAsync();
+                .Select(x => new Currencies()
+                {
+                    Id = x.Id,
+                    Title = x.Title
+                })
+                .ToListAsync(); 
 
             return Ok(result);
         }
