@@ -18,7 +18,7 @@ namespace EFCoreOperations.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllCurrencies()
         {
-           // var result = await _context.Currencies.ToListAsync();
+            // var result = await _context.Currencies.ToListAsync();
             var result = await (from currencies in _context.Currencies
                 select currencies).ToListAsync();
             return Ok(result);
@@ -33,20 +33,35 @@ namespace EFCoreOperations.Controllers
 
 
         [HttpGet("{name}")]
-        public async Task<IActionResult> GetAllCurrenciesNameId([FromRoute] string name)
+        public async Task<IActionResult> GetAllCurrenciesNameId([FromRoute] string name,
+            [FromQuery] string? description)
         {
-            
+
             // var result = await _context.Currencies
             //             .Where(x => x.Title == name).
             //             FirstOrDefaultAsync();
 
             //performance
-            var result = await _context.Currencies.
-                FirstOrDefaultAsync(x => x.Title == name);
+            //  var result = await _context.Currencies.
+            //      FirstOrDefaultAsync(x => x.Title == name);
 
             // return immediately as when data found
 
+            var result = await _context.Currencies.FirstOrDefaultAsync(x =>
+                x.Title == name &&
+                (string.IsNullOrEmpty(description)
+                 || x.Description == description));
 
+            return Ok(result);
+        }
+
+        [HttpPost("all")]
+        public async Task<IActionResult> GetCurrencyByIdsAsync([FromBody] List<int> ids)
+        {
+           // var ids = new List<int> { 1, 2, 3 };
+            var result = await _context.Currencies.
+                Where(x => ids.Contains(x.Id))
+                .ToListAsync();
 
             return Ok(result);
         }
